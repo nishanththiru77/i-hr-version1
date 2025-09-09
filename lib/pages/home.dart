@@ -10,7 +10,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool showCompanies = false;
   List<String> appliedCompanies = [];
 
   void toggleApply(String companyName) {
@@ -60,14 +59,16 @@ class _HomeState extends State<Home> {
                 ),
                 ListTile(
                   title: const Text("Applied Companies"),
-                  subtitle: appliedCompanies.isEmpty
-                      ? const Text("No companies applied")
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: appliedCompanies
-                              .map((c) => Text("• $c"))
-                              .toList(),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AppliedCompaniesPage(
+                          appliedCompanies: appliedCompanies,
                         ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -87,7 +88,6 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top bar
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -137,7 +137,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(height: 30.0),
-              // First Company Card
               _buildCompanyCard(
                 context,
                 isMobile,
@@ -148,7 +147,6 @@ class _HomeState extends State<Home> {
                 const CompanyDetails(),
               ),
               const SizedBox(height: 20.0),
-              // Second Company Card
               _buildCompanyCard(
                 context,
                 isMobile,
@@ -307,8 +305,8 @@ class _HomeState extends State<Home> {
   }
 }
 
-// Wrapper to add Apply button in details page
-class CompanyDetailWrapper extends StatelessWidget {
+// Wrapper to add Apply button in details page (no title in AppBar)
+class CompanyDetailWrapper extends StatefulWidget {
   final Widget detailsPage;
   final String companyName;
   final bool applied;
@@ -323,16 +321,35 @@ class CompanyDetailWrapper extends StatelessWidget {
   });
 
   @override
+  State<CompanyDetailWrapper> createState() => _CompanyDetailWrapperState();
+}
+
+class _CompanyDetailWrapperState extends State<CompanyDetailWrapper> {
+  late bool applied;
+
+  @override
+  void initState() {
+    super.initState();
+    applied = widget.applied;
+  }
+
+  void toggleButton() {
+    setState(() {
+      applied = !applied;
+    });
+    widget.onApplyToggle();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(companyName)),
       body: Column(
         children: [
-          Expanded(child: detailsPage),
+          Expanded(child: widget.detailsPage),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
-              onPressed: onApplyToggle,
+              onPressed: toggleButton,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
               ),
@@ -341,6 +358,31 @@ class CompanyDetailWrapper extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// Applied Companies Page
+class AppliedCompaniesPage extends StatelessWidget {
+  final List<String> appliedCompanies;
+
+  const AppliedCompaniesPage({super.key, required this.appliedCompanies});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Applied Companies")),
+      body: appliedCompanies.isEmpty
+          ? const Center(child: Text("No companies applied yet."))
+          : ListView.builder(
+              itemCount: appliedCompanies.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: const Icon(Icons.business),
+                  title: Text(appliedCompanies[index]),
+                );
+              },
+            ),
     );
   }
 }
