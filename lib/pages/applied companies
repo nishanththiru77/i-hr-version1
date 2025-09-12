@@ -1,0 +1,52 @@
+// lib/pages/applied_companies.dart
+import 'package:flutter/material.dart';
+import 'details.dart'; // so we can access CompanyDetails.appliedCompanies
+
+class AppliedCompanies extends StatelessWidget {
+  const AppliedCompanies({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final appliedList = CompanyDetails.appliedCompanies;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Applied Companies"),
+        backgroundColor: Colors.blueAccent,
+        centerTitle: true,
+      ),
+      body: appliedList.isEmpty
+          ? const Center(
+              child: Text(
+                "You have not applied to any companies yet.",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: appliedList.length,
+              itemBuilder: (context, index) {
+                final company = appliedList[index];
+                return Card(
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.business, color: Colors.blueAccent),
+                    title: Text(
+                      company,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: const Text("Application submitted"),
+                  ),
+                );
+              },
+            ),
+    );
+  }
+}
