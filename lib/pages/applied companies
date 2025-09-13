@@ -1,13 +1,18 @@
 // lib/pages/applied_companies.dart
 import 'package:flutter/material.dart';
-import 'details.dart'; // so we can access CompanyDetails.appliedCompanies
+import 'details.dart';
+import 'cdetails.dart';
 
 class AppliedCompanies extends StatelessWidget {
   const AppliedCompanies({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final appliedList = CompanyDetails.appliedCompanies;
+    // Merge applied lists from both details.dart and cdetails.dart
+    final appliedList = [
+      ...CompanyDetails.appliedCompanies,
+      ...CompanyDetails1.appliedCompanies,
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +39,8 @@ class AppliedCompanies extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ListTile(
-                    leading: const Icon(Icons.business, color: Colors.blueAccent),
+                    leading: const Icon(Icons.business,
+                        color: Colors.blueAccent),
                     title: Text(
                       company,
                       style: const TextStyle(
