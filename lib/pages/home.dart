@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/applied%20companies';
 import 'details.dart';
 import 'cdetails.dart';
-import 'applied_companies.dart';
+// import 'applied_companies.dart';
 import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
